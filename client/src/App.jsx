@@ -62,7 +62,7 @@ export default function App() {
         keywords: keywords.join(","),
       });
       const response = await fetch(
-        `https://imprese.onrender.com/imprese-senza-sito?${params.toString()}`
+        `https://imprese-1.onrender.com/imprese-senza-sito?${params.toString()}`
       );
       if (!response.ok) throw new Error("Errore nel recupero dati");
       const data = await response.json();
