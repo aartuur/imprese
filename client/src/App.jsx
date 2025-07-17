@@ -80,18 +80,25 @@ export default function App() {
           minHeight: "100vh",
           width: "100vw",
           bgcolor: "background.default",
-          py: 6,
-          px: 2,
+          py: { xs: 2, sm: 4, md: 6 },
+          px: { xs: 1, sm: 2 },
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth="md" sx={{ px: { xs: 0, sm: 2 } }}>
           <Typography
             variant="h3"
             gutterBottom
-            sx={{ fontWeight: "bold", color: "primary.main", textAlign: "center" }}
+            sx={{ 
+              fontWeight: "bold", 
+              color: "primary.main", 
+              textAlign: "center",
+              fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" },
+              px: { xs: 2, sm: 0 },
+              mb: { xs: 2, sm: 3 }
+            }}
           >
             IMPRESE SENZA SITO UFFICIALE
           </Typography>
@@ -100,8 +107,9 @@ export default function App() {
           <Paper
             elevation={6}
             sx={{
-              p: 4,
-              mb: 4,
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: { xs: 2, sm: 3, md: 4 },
+              mx: { xs: 1, sm: 0 },
               bgcolor: "background.paper",
               borderRadius: 2,
               boxShadow: "0 6px 15px rgb(20 86 153 / 0.2)",
@@ -113,8 +121,12 @@ export default function App() {
               fetchImprese();
             }}
           >
-            <Stack spacing={2}>
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
+            <Stack spacing={{ xs: 2, sm: 2 }}>
+              <Stack 
+                direction={{ xs: "column", sm: "row" }} 
+                spacing={{ xs: 2, sm: 2 }} 
+                justifyContent="center"
+              >
                 <TextField
                   label="Paese"
                   value={paese}
@@ -122,6 +134,11 @@ export default function App() {
                   required
                   fullWidth
                   size="small"
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
                 <TextField
                   label="Città"
@@ -130,6 +147,11 @@ export default function App() {
                   required
                   fullWidth
                   size="small"
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
                 <TextField
                   label="Numero risultati"
@@ -140,6 +162,11 @@ export default function App() {
                   required
                   fullWidth
                   size="small"
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
               </Stack>
 
@@ -151,15 +178,33 @@ export default function App() {
                 placeholder="Premi Enter per aggiungere"
                 fullWidth
                 size="small"
+                sx={{
+                  '& .MuiInputBase-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
 
-              <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
+              <Stack 
+                direction="row" 
+                spacing={1} 
+                sx={{ 
+                  flexWrap: "wrap",
+                  gap: { xs: 0.5, sm: 1 }
+                }}
+              >
                 {keywords.map((keyword, idx) => (
                   <Chip
                     key={idx}
                     label={keyword}
                     onDelete={() => handleKeywordDelete(keyword)}
                     color="secondary"
+                    size="small"
+                    sx={{
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      height: { xs: 28, sm: 32 },
+                      mb: { xs: 0.5, sm: 0 }
+                    }}
                   />
                 ))}
               </Stack>
@@ -169,10 +214,12 @@ export default function App() {
                   variant="contained"
                   type="submit"
                   sx={{
-                    width: 160,
+                    width: { xs: "100%", sm: 160 },
+                    height: { xs: 48, sm: 40 },
                     bgcolor: "secondary.main",
                     color: "secondary.contrastText",
                     fontWeight: "bold",
+                    fontSize: { xs: '1rem', sm: '0.875rem' }
                   }}
                 >
                   Cerca
@@ -185,74 +232,111 @@ export default function App() {
           <Paper
             elevation={4}
             sx={{
-              p: 4,
+              p: { xs: 2, sm: 3, md: 4 },
+              mx: { xs: 1, sm: 0 },
               bgcolor: "#fff9e463",
               borderRadius: 2,
               boxShadow: "0 4px 12px rgb(251 192 45 / 0.25)",
-              width: "100%",
-              maxWidth: "93%",
+              width: { xs: "calc(100% - 16px)", sm: "100%" },
+              maxWidth: { xs: "100%", sm: "93%" },
               display: "flex",
               flexDirection: "column",
-              gap: 2,
+              gap: { xs: 1.5, sm: 2 },
             }}
           >
             {loading && (
-              <Box display="flex" justifyContent="center" my={4}>
-                <CircularProgress color="primary" />
+              <Box display="flex" justifyContent="center" my={{ xs: 2, sm: 4 }}>
+                <CircularProgress color="primary" size={{ xs: 30, sm: 40 }} />
               </Box>
             )}
 
             {error && (
-              <Alert severity="error" sx={{ maxWidth: 600, mx: "auto" }}>
+              <Alert 
+                severity="error" 
+                sx={{ 
+                  maxWidth: { xs: "100%", sm: 600 }, 
+                  mx: "auto",
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}
+              >
                 {error}
               </Alert>
             )}
 
             {!loading && !error && imprese.length === 0 && (
-              <Alert severity="info" sx={{ maxWidth: 600, mx: "auto" }}>
+              <Alert 
+                severity="info" 
+                sx={{ 
+                  maxWidth: { xs: "100%", sm: 600 }, 
+                  mx: "auto",
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}
+              >
                 Nessuna impresa trovata
               </Alert>
             )}
 
             {!loading && !error && imprese.length > 0 && (
-              <Stack spacing={4}>
+              <Stack spacing={{ xs: 2, sm: 3, md: 4 }}>
                 {imprese.map((impresa, idx) => (
                   <Paper
                     key={idx}
                     elevation={6}
                     sx={{
-                      p: 3,
+                      p: { xs: 2, sm: 3 },
                       bgcolor: "white",
-                      borderLeft: "6px solid",
+                      borderLeft: { xs: "4px solid", sm: "6px solid" },
                       borderColor: "secondary.main",
-                      textAlign:"center",
+                      textAlign: "center",
                       boxShadow: "0 4px 20px rgb(251 192 45 / 0.3)",
                       transition: "transform 0.3s",
-                      "&:hover": { transform: "translateY(-5px)" },
+                      "&:hover": { 
+                        transform: { xs: "none", sm: "translateY(-5px)" }
+                      },
+                      borderRadius: { xs: 1, sm: 2 }
                     }}
                   >
                     <Typography
                       variant="h6"
                       gutterBottom
-                      sx={{ fontWeight: "bold", color: "primary.main" }}
+                      sx={{ 
+                        fontWeight: "bold", 
+                        color: "primary.main",
+                        fontSize: { xs: '1rem', sm: '1.25rem' },
+                        lineHeight: { xs: 1.3, sm: 1.4 },
+                        mb: { xs: 1.5, sm: 2 },
+                        wordBreak: "break-word"
+                      }}
                     >
                       {impresa.nome}
                     </Typography>
 
-                    <Stack spacing={1}>
+                    <Stack spacing={{ xs: 1, sm: 1 }}>
                       {Object.entries(impresa).map(([key, value]) => {
                         if (key === "nome" || value == null || value === "") return null;
 
                         if (key === "sito") {
                           return (
-                            <Typography variant="body2" key={key}>
+                            <Typography 
+                              variant="body2" 
+                              key={key}
+                              sx={{ 
+                                fontSize: { xs: '0.875rem', sm: '0.875rem' },
+                                textAlign: { xs: "left", sm: "center" },
+                                wordBreak: "break-all"
+                              }}
+                            >
                               <strong>Sito:</strong>{" "}
                               <Link
                                 href={value}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 underline="hover"
-                                sx={{ color: "secondary.main", fontWeight: "bold" }}
+                                sx={{ 
+                                  color: "secondary.main", 
+                                  fontWeight: "bold",
+                                  fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                                }}
                               >
                                 {value}
                               </Link>
@@ -264,7 +348,14 @@ export default function App() {
                           return (
                             <Typography
                               variant="body1"
-                              sx={{ whiteSpace: "pre-wrap", color: "text.primary" }}
+                              sx={{ 
+                                whiteSpace: "pre-wrap", 
+                                color: "text.primary",
+                                fontSize: { xs: '0.875rem', sm: '1rem' },
+                                textAlign: { xs: "left", sm: "center" },
+                                lineHeight: { xs: 1.4, sm: 1.5 },
+                                wordBreak: "break-word"
+                              }}
                               key={key}
                             >
                               {value}
@@ -275,7 +366,15 @@ export default function App() {
                         const label = key.charAt(0).toUpperCase() + key.slice(1);
 
                         return (
-                          <Typography variant="body2" key={key}>
+                          <Typography 
+                            variant="body2" 
+                            key={key}
+                            sx={{ 
+                              fontSize: { xs: '0.875rem', sm: '0.875rem' },
+                              textAlign: { xs: "left", sm: "center" },
+                              wordBreak: "break-word"
+                            }}
+                          >
                             <strong>{label}:</strong> {value}
                           </Typography>
                         );
