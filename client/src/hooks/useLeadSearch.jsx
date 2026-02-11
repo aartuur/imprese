@@ -22,7 +22,7 @@ export const useLeadSearch = () => {
       });
 
       const response = await fetch(
-        `https://imprese.onrender.com/api/v1/leads?${params.toString()}`
+        `https://imprese-2.onrender.com/api/v1/leads?${params.toString()}`
       );
 
       if (!response.ok) {
