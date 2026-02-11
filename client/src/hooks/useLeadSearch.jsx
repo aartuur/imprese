@@ -11,14 +11,10 @@ export const useLeadSearch = () => {
     setLeads([]);
 
     try {
-      // Unisce l'array di keywords in una stringa separata da virgole
-      const categoryParam = filters.keywords.join(",");
-
       const params = new URLSearchParams({
         country: filters.country,
         city: filters.city,
         limit: filters.limit.toString(),
-        category: categoryParam 
       });
 
       const response = await fetch(
