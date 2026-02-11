@@ -11,15 +11,18 @@ export const useLeadSearch = () => {
     setLeads([]);
 
     try {
+      // Unisce l'array di keywords in una stringa separata da virgole
+      const categoryParam = filters.keywords.join(",");
+
       const params = new URLSearchParams({
         country: filters.country,
         city: filters.city,
         limit: filters.limit.toString(),
-        category: filters.category
+        category: categoryParam 
       });
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/leads?${params.toString()}`
+        `https://imprese.onrender.com/api/v1/leads?${params.toString()}`
       );
 
       if (!response.ok) {
