@@ -1,6 +1,7 @@
-fastapi
-uvicorn
-openai
-google-search-results
-rich
-python-dotenv
+fastapi 
+uvicorn 
+google-generativeai 
+google-search-results 
+rich 
+python-dotenv 
+pydantic
