@@ -19,7 +19,7 @@ export const useLeadSearch = () => {
       });
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/leads?${params.toString()}`,
+        `https://imprese-2.onrender.com/api/v1/leads?${params.toString()}`,
       );
 
       if (!response.ok) {
