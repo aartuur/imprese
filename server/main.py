@@ -45,7 +45,7 @@ app = FastAPI(title="Lead Gen Sniper", version="2.2.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173","https://imprese.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -379,9 +379,17 @@ async def get_leads(
 
     raw_categories = []
     if categories:
-        raw_categories.extend(categories)
+        for item in categories:
+            if "," in item:
+                raw_categories.extend([x.strip() for x in item.split(",")])
+            else:
+                raw_categories.append(item)
+
     if category_single:
-        raw_categories.append(category_single)
+        if "," in category_single:
+            raw_categories.extend([x.strip() for x in category_single.split(",")])
+        else:
+            raw_categories.append(category_single)
 
     norm_categories = []
     for c in raw_categories:

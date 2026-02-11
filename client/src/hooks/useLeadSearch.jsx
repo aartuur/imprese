@@ -15,10 +15,11 @@ export const useLeadSearch = () => {
         country: filters.country,
         city: filters.city,
         limit: filters.limit.toString(),
+        category: filters.category 
       });
 
       const response = await fetch(
-        `https://imprese-2.onrender.com/api/v1/leads?${params.toString()}`
+        `http://localhost:8000/api/v1/leads?${params.toString()}`,
       );
 
       if (!response.ok) {

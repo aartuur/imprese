@@ -4,16 +4,17 @@ import {
 } from "@mui/material";
 import { 
   LocationOn, Language, ContentCopy, 
-  Phone,  Terminal, VerifiedUser, GppBad 
+  Phone, Terminal, VerifiedUser, GppBad, Business 
 } from "@mui/icons-material";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 
-// --- STESSO TEMA DEL SEARCHFORM PER COERENZA ---
+// Definizione del tema (puoi spostarla in un file separato se preferisci)
 const THEME = {
   primary: "#00f2ff",    // Cyan
   secondary: "#7000ff",  // Viola
   warning: "#f2ff00",    // Giallo Cyber
   danger: "#ff0055",     // Rosso Neon
+  success: "#00ff9d",    // Verde Matrix
   bg: "rgba(10, 10, 16, 0.6)",
   bgDark: "rgba(0, 0, 0, 0.4)",
   glass: "blur(10px)",
@@ -23,19 +24,33 @@ const THEME = {
 
 export const LeadCard = ({ lead, index }) => {
   
+  // Funzione per copiare il testo della pitch
   const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    // Qui potresti aggiungere un toast/snackbar di conferma
+    if (text) {
+      navigator.clipboard.writeText(text);
+      // Qui potresti aggiungere un feedback visivo (es. snackbar)
+    }
   };
 
   // Determina colore e icona in base allo stato
-  const isDirectoryOnly = lead.current_status === "Directory Only";
-  const statusColor = isDirectoryOnly ? THEME.warning : THEME.danger;
-  const StatusIcon = isDirectoryOnly ? VerifiedUser : GppBad;
+  // Logica: 
+  // - Directory Only = Warning (Giallo)
+  // - No Website = Danger (Rosso - Alta priorità per vendita sito)
+  // - Has Website = Success/Primary (Azzurro - Magari per servizi SEO)
+  let statusColor = THEME.primary;
+  let StatusIcon = Business;
+
+  if (lead.current_status === "Directory Only") {
+    statusColor = THEME.warning;
+    StatusIcon = VerifiedUser;
+  } else if (lead.current_status === "No Website") {
+    statusColor = THEME.danger;
+    StatusIcon = GppBad;
+  }
 
   return (
     <Grid item xs={12}>
-      <motion.div
+      <Motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -53,7 +68,7 @@ export const LeadCard = ({ lead, index }) => {
               transform: "translateY(-3px)",
               boxShadow: `0 10px 40px -10px ${THEME.primary}30`,
               border: `1px solid ${THEME.primary}60`,
-              "& .accent-bar": { height: "100%" } // Effetto hover sulla barra laterale
+              "& .accent-bar": { height: "100%" }
             }
           }}
         >
@@ -64,10 +79,11 @@ export const LeadCard = ({ lead, index }) => {
               position: "absolute",
               left: 0, top: 0, bottom: 0,
               width: "4px",
-              height: "40%", // Parte parziale, cresce in hover
+              height: "40%", 
               background: `linear-gradient(to bottom, ${THEME.primary}, ${THEME.secondary})`,
               transition: "height 0.4s ease",
-              boxShadow: `2px 0 10px ${THEME.primary}80`
+              boxShadow: `2px 0 10px ${THEME.primary}80`,
+              zIndex: 2
             }} 
           />
 
@@ -79,24 +95,24 @@ export const LeadCard = ({ lead, index }) => {
                 
                 {/* Header: Nome + Status */}
                 <Box>
-                  <Stack direction="row" alignItems="center" flexWrap="wrap" gap={1} mb={1}>
-                    <Typography variant="h5" sx={{ 
-                      fontWeight: 800, 
-                      color: "#fff",
-                      textTransform: "uppercase",
-                      letterSpacing: "1px",
-                      lineHeight: 1.2
-                    }}>
-                      {lead.business_name}
-                    </Typography>
-                  </Stack>
+                  <Typography variant="h5" sx={{ 
+                    fontWeight: 800, 
+                    color: "#fff",
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    lineHeight: 1.2,
+                    mb: 1.5,
+                    fontSize: { xs: "1.2rem", md: "1.4rem" }
+                  }}>
+                    {lead.business_name || "NOME SCONOSCIUTO"}
+                  </Typography>
                   
                   <Chip 
                     icon={<StatusIcon style={{ color: statusColor }} />}
-                    label={lead.current_status || "NO_DATA"} 
+                    label={lead.current_status || "STATUS SCONOSCIUTO"} 
                     size="small"
                     sx={{ 
-                      borderRadius: "4px", // Squadrato stile tech
+                      borderRadius: "4px", 
                       bgcolor: `${statusColor}15`, 
                       color: statusColor,
                       border: `1px solid ${statusColor}40`,
@@ -109,14 +125,17 @@ export const LeadCard = ({ lead, index }) => {
                 </Box>
 
                 {/* Dettagli Contatto */}
-                <Stack spacing={1.5} sx={{ mt: 2 }}>
-                  <Box display="flex" alignItems="center" gap={1.5}>
-                    <LocationOn sx={{ color: THEME.primary, fontSize: 20 }} /> 
+                <Stack spacing={1.5} sx={{ mt: 1 }}>
+                  
+                  {/* Indirizzo (mostra sempre, fallback se vuoto) */}
+                  <Box display="flex" alignItems="flex-start" gap={1.5}>
+                    <LocationOn sx={{ color: THEME.primary, fontSize: 20, mt: 0.3 }} /> 
                     <Typography variant="body2" color="rgba(255,255,255,0.7)">
-                      {lead.address || "Posizione sconosciuta"}
+                      {lead.address || "Posizione non rilevata"}
                     </Typography>
                   </Box>
 
+                  {/* Telefono (render condizionale) */}
                   {lead.phone && (
                     <Box display="flex" alignItems="center" gap={1.5}>
                       <Phone sx={{ color: THEME.secondary, fontSize: 20 }} />
@@ -126,12 +145,14 @@ export const LeadCard = ({ lead, index }) => {
                     </Box>
                   )}
 
+                  {/* Sito Web (render condizionale) */}
                   {lead.detected_url && (
                     <Box display="flex" alignItems="center" gap={1.5}>
                       <Language sx={{ color: "#fff", fontSize: 20 }} />
                       <Link 
                         href={lead.detected_url} 
                         target="_blank" 
+                        rel="noopener noreferrer"
                         underline="hover"
                         sx={{ 
                           color: THEME.primary, 
@@ -139,7 +160,8 @@ export const LeadCard = ({ lead, index }) => {
                           fontSize: "0.85rem",
                           textOverflow: "ellipsis",
                           overflow: "hidden",
-                          whiteSpace: "nowrap"
+                          whiteSpace: "nowrap",
+                          maxWidth: "250px"
                         }}
                       >
                         {lead.detected_url}
@@ -155,9 +177,11 @@ export const LeadCard = ({ lead, index }) => {
               bgcolor: THEME.bgDark, 
               borderLeft: { xs: "none", md: `1px solid rgba(255,255,255,0.05)` },
               borderTop: { xs: `1px solid rgba(255,255,255,0.05)`, md: "none" },
-              position: "relative"
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "200px" // Altezza minima garantita
             }}>
-              <Box sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
+              <Box sx={{ p: 3, flex: 1, display: "flex", flexDirection: "column" }}>
                 
                 {/* Terminal Header */}
                 <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
@@ -177,6 +201,7 @@ export const LeadCard = ({ lead, index }) => {
                     <IconButton 
                       size="small"
                       onClick={() => copyToClipboard(lead.sales_pitch)}
+                      disabled={!lead.sales_pitch}
                       sx={{ 
                         color: "rgba(255,255,255,0.4)", 
                         border: "1px solid rgba(255,255,255,0.1)",
@@ -202,15 +227,14 @@ export const LeadCard = ({ lead, index }) => {
                   lineHeight: 1.6,
                   whiteSpace: "pre-line",
                   overflowY: "auto",
-                  maxHeight: "150px", // Scrollabile se troppo lungo
+                  maxHeight: "180px",
                   pr: 1,
-                  // Custom Scrollbar
                   "&::-webkit-scrollbar": { width: "4px" },
                   "&::-webkit-scrollbar-track": { background: "rgba(255,255,255,0.02)" },
                   "&::-webkit-scrollbar-thumb": { background: THEME.secondary, borderRadius: "2px" }
                 }}>
                   <span style={{ color: "rgba(255,255,255,0.3)", marginRight: "8px" }}>&gt;</span>
-                  {lead.sales_pitch || "Analisi dati insufficiente per generare pitch..."}
+                  {lead.sales_pitch ? lead.sales_pitch : "Analisi dati in corso o non disponibile..."}
                   <span className="blinking-cursor">_</span>
                 </Box>
                 
@@ -218,13 +242,13 @@ export const LeadCard = ({ lead, index }) => {
             </Grid>
           </Grid>
 
-          {/* Stili globali CSS-in-JS per il cursore lampeggiante */}
+          {/* Stili globali per il cursore */}
           <style>{`
             @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-            .blinking-cursor { color: ${THEME.primary}; animation: blink 1s step-end infinite; font-weight: bold; }
+            .blinking-cursor { color: ${THEME.primary}; animation: blink 1s step-end infinite; font-weight: bold; margin-left: 2px; }
           `}</style>
         </Box>
-      </motion.div>
+      </Motion.div>
     </Grid>
   );
 };
